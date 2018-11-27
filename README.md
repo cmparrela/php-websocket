@@ -1,4 +1,4 @@
-# ratchet-sample
+# Ratchet WAMP Server
 Exemplo de uma aplicação WAMP server com PHP Ratchet
 
 ### Bibliotecas usadas:
