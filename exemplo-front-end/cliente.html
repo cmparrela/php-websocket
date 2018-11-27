@@ -1,0 +1,46 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="autobahn.js"></script>
+
+<script>
+    class WebSocketAutoBahn {
+
+        constructor() {
+            this.conexao = '';
+            this.conexao = new ab.Session('ws://127.0.0.1:8088', this.aoIniciar, this.aoFinalizar, {
+                'skipSubprotocolCheck': true
+            });
+        }
+
+        aoIniciar() {
+            this.subscribe('newsTopic', function (topic, data) {
+                // Check the message content to see what this message is about
+                if (data.about == 'subscribers') {
+                    console.log('Subscribers: ' + data.subscribers);
+                } else {
+                    console.log('New post for "' + topic + '" (' + data.when + '): ' + data.subscribers);
+                }
+            })
+        }
+
+        aoFinalizar() {
+            console.warn('WebSocket connection closed');
+        }
+
+        enviaMensagem() {
+            try {
+                this.conexao.publish('newsTopic', 'Hello, world!');
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+    }
+
+    $(document).ready(function () {
+        let wb = new WebSocketAutoBahn();
+
+        setTimeout(function () {
+            wb.enviaMensagem();
+        }, 2000)
+    });
+</script>
